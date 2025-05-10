@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Generator de parole</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .output {
+      font-size: 1.2rem;
+      background: #eee;
+      padding: 10px;
+      border-radius: 5px;
+      word-break: break-all;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input[type="range"] {
+      width: 100%;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 15px;
+      width: 100%;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Generator de parole</h1>
+    <div class="output" id="password">Parola generată va apărea aici</div>
+
+    <label for="length">Lungime parolă: <span id="length-value">12</span></label>
+    <input type="range" id="length" min="6" max="32" value="12"/>
+
+    <label><input type="checkbox" id="include-uppercase" checked /> Litere mari</label>
+    <label><input type="checkbox" id="include-lowercase" checked /> Litere mici</label>
+    <label><input type="checkbox" id="include-numbers" checked /> Cifre</label>
+    <label><input type="checkbox" id="include-symbols" checked /> Simboluri</label>
+
+    <button onclick="generatePassword()">Generează parola</button>
+  </div>
+
+  <script>
+    const lengthSlider = document.getElementById("length");
+    const lengthValue = document.getElementById("length-value");
+    const output = document.getElementById("password");
+
+    lengthSlider.addEventListener("input", () => {
+      lengthValue.textContent = lengthSlider.value;
+    });
+
+    function generatePassword() {
+      const length = +lengthSlider.value;
+      const includeUpper = document.getElementById("include-uppercase").checked;
+      const includeLower = document.getElementById("include-lowercase").checked;
+      const includeNumbers = document.getElementById("include-numbers").checked;
+      const includeSymbols = document.getElementById("include-symbols").checked;
+
+      const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const lower = "abcdefghijklmnopqrstuvwxyz";
+      const numbers = "0123456789";
+      const symbols = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+      let allChars = "";
+      if (includeUpper) allChars += upper;
+      if (includeLower) allChars += lower;
+      if (includeNumbers) allChars += numbers;
+      if (includeSymbols) allChars += symbols;
+
+      if (allChars.length === 0) {
+        output.textContent = "Selectează cel puțin un tip de caracter!";
+        return;
+      }
+
+      let password = "";
+      for (let i = 0; i < length; i++) {
+        password += allChars.charAt(Math.floor(Math.random() * allChars.length));
+      }
+
+      output.textContent = password;
+    }
+  </script>
+</body>
+</html>
