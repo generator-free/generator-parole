@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tool-uri Online</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .output {
+      font-size: 1.2rem;
+      background: #eee;
+      padding: 10px;
+      border-radius: 5px;
+      word-break: break-all;
+      margin: 10px 0;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input[type="range"] {
+      width: 100%;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 15px;
+      width: 100%;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    hr {
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Generator de Parole</h1>
+    <div class="output" id="password">Parola generată va apărea aici</div>
+
+    <label for="length">Lungime parolă: <span id="length-value">12</span></label>
+    <input type="range" id="length" min="6" max="32" value="12"/>
+
+    <label><input type="checkbox" id="include-uppercase" checked /> Litere mari</label>
+    <label><input type="checkbox" id="include-lowercase" checked /> Litere mici</label>
+    <label><input type="checkbox" id="include-numbers" checked /> Cifre</label>
+    <label><input type="checkbox" id="include-symbols" checked /> Simboluri</label>
+
+    <button onclick="generatePassword()">Generează parola</button>
+  </div>
+
+  <div class="container">
+    <h2>Generator de Username</h2>
+    <div class="output" id="username">Username-ul generat va apărea aici</div>
+
+    <label for="username-length">Lungime username: <span id="username-length-value">10</span></label>
+    <input type="range" id="username-length" min="5" max="20" value="10"/>
+
+    <label><input type="checkbox" id="include-numbers-username" checked /> Include cifre</label>
+
+    <button onclick="generateUsername()">Generează username</button>
+  </div>
+
+  <script>
+    // Generator parole
+    const lengthSlider = document.getElementById("length");
+    const lengthValue = document.getElementById("length-value");
+    const passwordOutput = document.getElementById("password");
+
+    lengthSlider.addEventListener("input", () => {
+      lengthValue.textContent = lengthSlider.value;
+    });
+
+    function generatePassword() {
+      const length = +lengthSlider.value;
+      const includeUpper = document.getElementById("include-uppercase").checked;
+      const includeLower = document.getElementById("include-lowercase").checked;
+      const includeNumbers = document.getElementById("include-numbers").checked;
+      const includeSymbols = document.getElementById("include-symbols").checked;
+
+      const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const lower = "abcdefghijklmnopqrstuvwxyz";
+      const numbers = "0123456789";
+      const symbols = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+      let allChars = "";
+      if (includeUpper) allChars += upper;
+      if (includeLower) allChars += lower;
+      if (includeNumbers) allChars += numbers;
+      if (includeSymbols) allChars += symbols;
+
+      if (allChars.length === 0) {
+        passwordOutput.textContent = "Selectează cel puțin un tip de caracter!";
+        return;
+      }
+
+      let password = "";
+      for (let i = 0; i < length; i++) {
+        password += allChars.charAt(Math.floor(Math.random() * allChars.length));
+      }
+
+      passwordOutput.textContent = password;
+    }
+
+    // Generator username
+    const usernameLengthSlider = document.getElementById("username-length");
+    const usernameLengthValue = document.getElementById("username-length-value");
+
+    usernameLengthSlider.addEventListener("input", () => {
+      usernameLengthValue.textContent = usernameLengthSlider.value;
+    });
+
+    function generateUsername() {
+      const adjectives = ["Cool", "Dark", "Fast", "Happy", "Magic", "Furious", "Silent", "Epic"];
+      const nouns = ["Wolf", "Ninja", "Knight", "Ghost", "Falcon", "Rider", "Gamer", "Shadow"];
+      const includeNumbers = document.getElementById("include-numbers-username").checked;
+      const length = +usernameLengthSlider.value;
+
+      let base = adjectives[Math.floor(Math.random() * adjectives.length)] +
+                 nouns[Math.floor(Math.random() * nouns.length)];
+
+      if (includeNumbers) {
+        base += Math.floor(Math.random() * 100);
+      }
+
+      if (base.length > length) {
+        base = base.slice(0, length);
+      } else {
+        while (base.length < length) {
+          base += String.fromCharCode(97 + Math.floor(Math.random() * 26));
+        }
+      }
+
+      document.getElementById("username").textContent = base;
+    }
+  </script>
+
+</body>
+</html>
